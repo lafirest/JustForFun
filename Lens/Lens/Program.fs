@@ -24,6 +24,6 @@ let main argv =
     let monster = {Name = "Monster"; Level = 14; Skill = skill} 
 
     view lens monster |> printfn "Get Damage is: %O" 
-    over lens (fun _ -> 999 |> Identity :> IFunctor<int>) monster 
+    over lens (fun _ -> 999) monster 
     |> printfn "Update Damage, New Monster is: %O" 
     0 // return an integer exit code

@@ -31,5 +31,5 @@ let over<'a, 's>
     f 
     s = 
     let toFunctor = fun x -> Identity x :> IFunctor<'a>
-    let (Identity r) =  (lens (toFunctor >> f) s) :?> Identity<'s> in
+    let (Identity r) =  (lens (f >> toFunctor) s) :?> Identity<'s> in
         r
