@@ -18,8 +18,6 @@ let smaybe = new StateTBuiler(new MaybeBuilder() :> IMonadBuilder)
 let get<'s> = StateT <| fun (s : 's) -> smaybe.IM.mreturn (s, s)
 let put s = StateT <| fun _ -> smaybe.IM.mreturn (s, ())
 let liftM m = StateT <| fun s -> 
-                            match m with
-                                Nothing -> Nothing
-                                | Just a -> Just (s, a)
-
-
+                            smaybe.IM.mbind 
+                                m 
+                                <| fun a -> smaybe.IM.mreturn (s, a)
