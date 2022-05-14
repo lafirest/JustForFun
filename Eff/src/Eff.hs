@@ -2,17 +2,22 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE DataKinds #-}
 
 module Eff where
 
 import FTCQueue
 import Data.Sum
+import FTCQueue (tsingleton)
 
+type Arr r a b = a -> Eff r b
 type Arrs r a b = FTCQueue (Eff r) a b
 
 data Eff r a where
   Pure :: a -> Eff r a
   Eff :: Sum r x -> Arrs r x b -> Eff r b
+
 
 instance Functor (Eff r) where
   fmap f (Pure x) = Pure $ f x
@@ -41,5 +46,18 @@ qApp q x =
       Pure y -> qApp t y
       Eff r q' -> Eff r (q' >< t)
 
-qComp :: Arrs r a b -> (Eff r b -> Eff r' c) -> Arrs r' a c
-qComp g h a = h $ qApp g a
+qComp :: Arrs r a b -> (Eff r b -> Eff r' c) -> Arr r' a c
+qComp q h = h . qApp q
+
+handleRquest :: (a -> Eff r w) ->
+  (forall v. f v -> Arr r v w -> Eff r w) ->
+  Eff (f ': r) a -> Eff r w
+handleRquest ret h = loop
+  where
+    loop (Pure x) = ret x
+    loop (Eff r q) = case decompose r of
+      Right f -> h f k
+      Left r' -> Eff r' (tsingleton k)
+      where k = qComp q loop
+
+runEff (Pure x) = x

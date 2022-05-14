@@ -26,8 +26,10 @@ source-repository head
 library
   exposed-modules:
       Eff
+      EIO
       FTCQueue
       Lib
+      Reader
   other-modules:
       Paths_Eff
   hs-source-dirs:
@@ -47,6 +49,7 @@ executable Eff-exe
   build-depends:
       Eff
     , base >=4.7 && <5
+    , fastsum
   default-language: Haskell2010
 
 test-suite Eff-test

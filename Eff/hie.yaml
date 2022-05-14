@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "Eff:lib"
+
+    - path: "./app/Main.hs"
+      component: "Eff:exe:Eff-exe"
+
+    - path: "./app/Paths_Eff.hs"
+      component: "Eff:exe:Eff-exe"
+
+    - path: "./test"
+      component: "Eff:test:Eff-test"
