@@ -26,15 +26,11 @@ class (sub :: (* -> *) -> (* -> *)) :<: sup where
 instance f :<: f where
   inj = id
 
+instance  {-# OVERLAPPABLE #-} (f :<: h) => f :<: (g :+: h) where
+  inj = Inr . inj
+
 instance  {-# OVERLAPPABLE #-} f :<: (f :+: g) where
   inj = Inl
-
---instance  {-# OVERLAPPABLE #-} (f :<: h) => f :<: (g :+: h) where
---  inj = Inr . inj
-
-type family Members sub sup :: Constraint where
-  Members (l :+: r) u = (Members l u, Members r u)
-  Members t         u = t :<: u
 
 send :: (eff :<: sig, Algebra sig m) => eff m a -> m a
 send sig = runIdentity <$>
