@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "AlgebraicEff:lib"
+
+    - path: "./app/Main.hs"
+      component: "AlgebraicEff:exe:AlgebraicEff-exe"
+
+    - path: "./app/Paths_AlgebraicEff.hs"
+      component: "AlgebraicEff:exe:AlgebraicEff-exe"
+
+    - path: "./test"
+      component: "AlgebraicEff:test:AlgebraicEff-test"
